@@ -1,0 +1,25 @@
+.hajok-container {
+  padding: 32px;
+  background-color: #f7f7f7;
+  min-height: 100vh;
+  color: #000;
+}
+
+.hajok-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hajo-kartya {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+mat-card-title {
+  font-size: 1.6rem;
+  font-weight: 600;
+}

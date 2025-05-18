@@ -1,0 +1,22 @@
+<div class="hajok-container">
+  <h2>Elérhető hajók</h2>
+
+  <div class="hajok-lista">
+    @for (hajo of hajok; track hajo.id) {
+      <mat-card class="hajo-kartya">
+        <mat-card-header>
+          <mat-card-title>{{ hajo.nev }}</mat-card-title>
+        </mat-card-header>
+        <img mat-card-image [src]="hajo.kepUrl" [alt]="hajo.nev">
+        <mat-card-content>
+          <p>{{ hajo.leiras }}</p>
+          <p><strong>Kapacitás:</strong> {{ hajo.kapacitas }} fő</p>
+          <p><strong>Ár:</strong> {{ hajo.ar | hufCurrency }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-raised-button color="primary" [routerLink]="['/foglalas', hajo.id]">Foglalás</button>
+        </mat-card-actions>
+      </mat-card>
+    }
+  </div>
+</div>

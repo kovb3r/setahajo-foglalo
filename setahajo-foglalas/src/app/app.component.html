@@ -1,0 +1,26 @@
+<mat-sidenav-container class="app-container">
+  <mat-sidenav #sidenav mode="side" opened>
+    <app-navbar [sidenav]="sidenav" [isLoggedIn]="isLoggedIn" (logoutEvent)="logout()"></app-navbar>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button mat-icon-button (click)="onToggleSidenav(sidenav)">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="app-title">LearnFlow</span>
+      <span class="spacer"></span>
+      <ng-container *ngIf="isLoggedIn; else guestLinks">
+        <button mat-button routerLink="/profile">Profile</button>
+        <button mat-button (click)="logout()">Logout</button>
+      </ng-container>
+      <ng-template #guestLinks>
+        <button mat-button routerLink="/login">Login</button>
+      </ng-template>
+    </mat-toolbar>
+
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
