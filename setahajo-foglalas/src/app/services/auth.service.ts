@@ -50,5 +50,11 @@ export class AuthService {
   updateLoginStatus(isLoggedIn: boolean): void {
     localStorage.setItem('isLoggedIn', isLoggedIn ? 'true' : 'false');
   }
+
+   async updateDisplayName(displayName: string): Promise<void> {
+    const user = this.auth.currentUser;
+    if (!user) throw new Error('Nincs bejelentkezett felhasználó');
+    await updateProfile(user, { displayName });
+  }
 }
 

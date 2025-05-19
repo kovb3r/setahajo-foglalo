@@ -1,0 +1,19 @@
+<mat-card class="profile-card">
+  <mat-card-header>
+    <mat-card-title>Profil</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content *ngIf="user.email">
+    <p><strong>Email:</strong> {{ user.email }}</p>
+
+    <form (ngSubmit)="updateName()">
+      <mat-form-field appearance="outline">
+        <mat-label>Név szerkesztése</mat-label>
+        <input matInput [(ngModel)]="newDisplayName" name="displayName" required>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit">Frissítés</button>
+    </form>
+
+    <p *ngIf="message" class="message">{{ message }}</p>
+  </mat-card-content>
+</mat-card>
