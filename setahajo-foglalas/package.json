@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration production --output-mode static --no-server",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:setahajo-foglalas": "node dist/setahajo-foglalas/server/server.mjs"
