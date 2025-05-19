@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, addDoc, query, where, getDocs, CollectionReference, DocumentData } from '@angular/fire/firestore';
+import { Firestore, collection, addDoc, query, where, getDocs, CollectionReference, DocumentData, orderBy, limit } from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
+import { firstValueFrom } from 'rxjs';   
 
 export interface Booking {
   id?: string;
@@ -22,18 +23,53 @@ export class BookingService {
     return collection(this.firestore, 'bookings');
   }
 
-  async createBooking(b: Omit<Booking,'id'|'createdAt'>) {
-    const booking: Booking = {
-      ...b,
-      createdAt: new Date()
-    };
-    const docRef = await addDoc(this.bookingsCol(), booking);
-    return docRef.id;
+  private async getUserId(): Promise<string> {
+    const user = await firstValueFrom(this.authService.currentUser);
+    if (!user) throw new Error('Nincs bejelentkezett felhasználó');
+    return user.uid;
+  }
+
+  async getMyBookingsByUser(userId: string): Promise<Booking[]> {
+    const q = query(
+      this.bookingsCol(),
+      where('userId', '==', userId)
+    );
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...(d.data() as Booking) }));
+  }
+
+  async getUpcomingBookings(limitCount = 5): Promise<Booking[]> {
+    const user = await firstValueFrom(this.authService.currentUser);
+    if (!user) return [];
+
+    const todayIso = new Date().toISOString().split('T')[0]; 
+    // (1) csak a saját userId
+    // (2) dátum >= mai nap
+    // (3) rendezés dátum szerint
+    // (4) limit
+    const q = query(
+      this.bookingsCol(),
+      where('userId', '==', user.uid),
+      where('datum', '>=', todayIso),
+      orderBy('datum', 'asc'),
+      limit(limitCount)
+    );
+
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...(d.data() as Booking) }));
+  }
+
+  
+
+  async createBooking(b: Omit<Booking,'id'|'createdAt'|'userId'>) {
+    const userId = await this.getUserId();
+    const booking: Booking = { userId, createdAt: new Date(), ...b };
+    return addDoc(this.bookingsCol(), booking);
   }
 
   /** Lekérdezi a bejelentkezett user foglalásait */
   async getMyBookings(): Promise<Booking[]> {
-    const user = this.authService.currentUser.snapshot || null;
+    const user = await firstValueFrom(this.authService.currentUser);
     if (!user) return [];
     const q = query(this.bookingsCol(), where('userId', '==', user.uid));
     const snap = await getDocs(q);

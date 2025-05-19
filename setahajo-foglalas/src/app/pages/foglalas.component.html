@@ -1,40 +1,45 @@
-<div class="foglalas-form">
-    <h2>Hajó foglalás</h2>
+<!-- src/app/pages/foglalas.component.html -->
+<mat-card *ngIf="hajo" class="foglalas-card">
+    <mat-card-header>
+        <mat-card-title>Foglalás: {{ hajo.nev }}</mat-card-title>
+        <mat-card-subtitle>Ár: {{ hajo.ar | hufCurrency }}</mat-card-subtitle>
+    </mat-card-header>
 
-    <div *ngIf="hajo as h">
-        <h2>Foglalás: {{ h.nev }}</h2>
-        <p><strong>Ár:</strong> {{ h.ar | currency:'HUF' }}</p>
-    </div>
-    <ng-template #formTemplate>
-        <form (ngSubmit)="onSubmit()" *ngIf="!submitted">
-            <label>
-            Név:
-            <input type="text" [(ngModel)]="foglalas.nev" name="nev" required />
-            </label>
+    <mat-card-content *ngIf="!submitted; else thanks">
+        <form (ngSubmit)="onSubmit()" class="foglalas-form">
+            <div class="form-grid">
+                <mat-form-field appearance="outline">
+                    <mat-label>Név</mat-label>
+                    <input matInput required [(ngModel)]="foglalas.nev" name="nev">
+                </mat-form-field>
 
-            <label>
-            E-mail:
-            <input type="email" [(ngModel)]="foglalas.email" name="email" required />
-            </label>
+                <mat-form-field appearance="outline">
+                    <mat-label>E-mail</mat-label>
+                    <input matInput type="email" required [(ngModel)]="foglalas.email" name="email">
+                </mat-form-field>
 
-            <label>
-            Létszám:
-            <input type="number" [(ngModel)]="foglalas.letszam" name="letszam" min="1" required />
-            </label>
+                <mat-form-field appearance="outline">
+                    <mat-label>Létszám</mat-label>
+                    <input matInput type="number" min="1" required [(ngModel)]="foglalas.letszam" name="letszam">
+                </mat-form-field>
 
-            <label>
-            Dátum:
-            <input type="date" [(ngModel)]="foglalas.datum" name="datum" required />
-            </label>
+                <mat-form-field appearance="outline">
+                    <mat-label>Dátum</mat-label>
+                    <input matInput type="date" required [(ngModel)]="foglalas.datum" name="datum">
+                </mat-form-field>
+            </div>
 
-            <button type="submit">Foglalás</button>
+            <div class="actions">
+                <button mat-raised-button color="primary" type="submit">Foglalás</button>
+                <p *ngIf="error" class="error">{{ error }}</p>
+            </div>
         </form>
-    </ng-template>
-    <div *ngIf="submitted; else formTemplate" class="siker-uzenet">
-        <h3>Köszönjük a foglalást!</h3>
-        <p><strong>Név:</strong> {{ foglalas.nev }}</p>
-        <p><strong>E-mail:</strong> {{ foglalas.email }}</p>
-        <p><strong>Létszám:</strong> {{ foglalas.letszam }}</p>
-        <p><strong>Dátum:</strong> {{ foglalas.datum | dateFormat }}</p>
+    </mat-card-content>
+</mat-card>
+
+<ng-template #thanks>
+    <div class="thanks">
+        <h3>Köszönjük, a foglalás megtörtént!</h3>
+        <p><strong>Időpont:</strong> {{ foglalas.datum | dateFormat }}</p>
     </div>
-</div>
+</ng-template>

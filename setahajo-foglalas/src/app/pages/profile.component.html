@@ -2,7 +2,6 @@
   <mat-card-header>
     <mat-card-title>Profil</mat-card-title>
   </mat-card-header>
-
   <mat-card-content *ngIf="user.email">
     <p><strong>Email:</strong> {{ user.email }}</p>
 
@@ -17,3 +16,31 @@
     <p *ngIf="message" class="message">{{ message }}</p>
   </mat-card-content>
 </mat-card>
+
+<mat-card *ngIf="upcoming.length" class="profile-card">
+  <mat-card-header>
+    <mat-card-title>Közelgő foglalásaim</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-list>
+      <mat-list-item *ngFor="let b of upcoming">
+        {{ b.hajoId }} – {{ b.datum | dateFormat }} – {{ b.letszam }} fő
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="bookings.length" class="profile-card">
+  <mat-card-header>
+    <mat-card-title>Foglalásaim</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-list>
+      <mat-list-item *ngFor="let b of bookings">
+        {{ b.hajoId }} – {{ b.datum | dateFormat }} – {{ b.letszam }} fő
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>
+
+

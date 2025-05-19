@@ -1,36 +1,35 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { Hajo } from '../models/hajo.model';
-import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
-import { HufCurrencyPipe } from '../pipes/huf-currency.pipe';
+import { HAJOK } from '../data/hajok.data';
+import { HajoCardComponent } from '../components/hajo-card/hajo-card.component';
+import { CommonModule } from '@angular/common';           
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-hajok',
   standalone: true,
-  imports: [CommonModule, RouterModule, MatCardModule, MatButtonModule, HufCurrencyPipe],
+  imports: [HajoCardComponent, CommonModule, RouterModule],
   templateUrl: './hajok.component.html',
   styleUrls: ['./hajok.component.scss']
 })
 export class HajokComponent {
-  // ...
-  hajok: Hajo[] = [
-    {
-      id: '1',
-      nev: 'Duna Expressz',
-      kapacitas: 40,
-      ar: 15000,
-      kepUrl: 'assets/hajok/duna-expressz.jpg',
-      leiras: 'Gyors, kényelmes hajó a Dunán.'
-    },
-    {
-      id: '2',
-      nev: 'Balaton Királynője',
-      kapacitas: 60,
-      ar: 18000,
-      kepUrl: 'assets/images/balaton-kiralynoje.jpg',
-      leiras: 'Luxus élmény a Balatonon.'
-    }
-  ];
+  hajok: Hajo[] = HAJOK;
+  selected?: Hajo;
+
+  constructor(private router: Router) {}
+
+  onSelect(h: Hajo) {
+    this.selected = h;
+  }
+
+  onHover(h: Hajo) {
+    // pl. mutat egy tooltipet, vagy csak console.log
+    console.log('Hover:', h.nev);
+  }
+
+  onBook(h: Hajo) {
+    // átirányít a foglalási oldalra
+    this.router.navigate(['/foglalas', h.id]);
+  }
 }

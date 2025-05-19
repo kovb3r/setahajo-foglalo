@@ -8,6 +8,9 @@ import { MatButtonModule } from '@angular/material/button';
 
 import { AuthService } from '../services/auth.service';
 import { Subscription } from 'rxjs';
+import { BookingService, Booking } from '../services/booking.service';
+import { MatListModule } from '@angular/material/list';
+import { DateFormatPipe } from '../pipes/date-format.pipe';
 
 @Component({
   selector: 'app-profile',
@@ -19,12 +22,17 @@ import { Subscription } from 'rxjs';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatListModule,
+    DateFormatPipe
   ],
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss']
 })
 export class ProfileComponent implements OnInit, OnDestroy {
+  private bookingService = inject(BookingService);
+  bookings: Booking[] = [];
+  upcoming: Booking[] = [];
   private authService = inject(AuthService);
   private sub?: Subscription;
 
@@ -32,14 +40,22 @@ export class ProfileComponent implements OnInit, OnDestroy {
   newDisplayName = '';
   message = '';
 
-  ngOnInit() {
+  async ngOnInit() {
     // Lifecycle Hook #1
-    this.sub = this.authService.currentUser.subscribe(u => {
+    this.sub = this.authService.currentUser.subscribe(async u => {
       if (u) {
+        // beállítjuk a profil-mezőket
         this.user.email = u.email || '';
         this.user.displayName = u.displayName || '';
         this.newDisplayName = this.user.displayName;
+
+        // és csak most kérjük le a foglalásokat
+        this.bookings = await this.bookingService.getMyBookingsByUser(u.uid);
+      } else {
+        // kijelentkezett állapot: töröljük a listát
+        this.bookings = [];
       }
+      this.upcoming = await this.bookingService.getUpcomingBookings(5);
     });
   }
 

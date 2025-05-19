@@ -1,25 +1,26 @@
+/* körbeveszi az egész HajokComponent tartalmat */
+.hajok-page {
+  background-color: #ffffff;  /* tiszta fehér */
+  display: block;
+  min-height: 100vh;          /* teljes magasság, hogy kitöltse a viewportot */
+}
+
+/* a konténered már így néz ki: */
 .hajok-container {
-  padding: 32px;
-  background-color: #f7f7f7;
-  min-height: 100vh;
-  color: #000;
+  max-width: 900px;
+  margin: 24px auto;
+  padding: 24px 16px;         /* egy kis belső margó is jól mutat */
 }
 
-.hajok-lista {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  max-width: 800px;
-  margin: 0 auto;
+/* a grid marad változatlan: */
+.hajok-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
 }
 
-.hajo-kartya {
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-mat-card-title {
-  font-size: 1.6rem;
-  font-weight: 600;
+@media (min-width: 768px) {
+  .hajok-grid {
+    grid-template-columns: repeat(2,1fr);
+  }
 }
